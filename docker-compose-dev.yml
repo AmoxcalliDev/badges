@@ -1,0 +1,12 @@
+services:
+  system:
+    image: node:25-alpine
+    init: true
+    working_dir: /home/dev
+    container_name: badges
+    command: sh -c "npm i && npm run dev"
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/home/dev
+    restart: unless-stopped
