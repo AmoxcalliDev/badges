@@ -20,7 +20,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ username: 
         const iconSize = 14;
         const iconSvg = getBadgeIcon('simple-icons:github', '#ffffff', iconSize);
 
-        // 3. Dimensiones — estilo shields.io: paneles, texto y número bien proporcionados
+        // 3. Dimensiones — paneles, texto y número bien proporcionados
         const height = 28;
         const iconPad = 6;
         const iconTextGap = 4;
@@ -40,7 +40,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ username: 
         const iconY = Math.round((height - iconSize) / 2);
         const textY = Math.round(height / 2) + 4;
 
-        // 4. SVG — flat puro, esquinas cuadradas, inspirado en shields.io
+        // 4. SVG — flat puro, esquinas cuadradas
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${totalWidth}" height="${height}" role="img" aria-label="GitHub followers: ${followers}">
             <title>GitHub followers: ${followers}</title>
             <rect width="${leftWidth}" height="${height}" fill="#555"/>

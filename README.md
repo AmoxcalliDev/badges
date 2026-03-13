@@ -5,6 +5,8 @@
 [![Licencia: AGPL v3](https://img.shields.io/badge/Licencia-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Construido con Next.js](https://img.shields.io/badge/Construido_con-Next.js-black?logo=next.js)](https://nextjs.org/)
 
+🇺🇸 [English version](README.en.md)
+
 **Amoxcalli Badges** es el motor open source detrás de `badges.amoxcalli.dev`. Genera badges SVG dinámicos y altamente personalizables al vuelo. Diseñado como una alternativa moderna y de alto rendimiento a los servicios de badges tradicionales, con soporte nativo para plataformas como GitHub y un catálogo masivo de íconos offline.
 
 ## ✨ Características
