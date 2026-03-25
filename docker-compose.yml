@@ -1,4 +1,16 @@
 services:
+  database:
+    image: postgres:18.3-alpine
+    ports:
+      - 5432:5432
+    networks:
+      - intranet
+    volumes:
+      - database-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    restart: unless-stopped
+
   project:
     build:
       context: .
@@ -6,6 +18,17 @@ services:
     init: true
     ports:
       - 3000:3000
+    networks:
+      - intranet
     volumes:
       - .:/home
+    env_file:
+      - .env
     restart: unless-stopped
+
+volumes:
+  database-data:
+
+networks:
+  intranet:
+    driver: bridge
