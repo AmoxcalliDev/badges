@@ -1,4 +1,6 @@
 import { getIconData, iconToSVG } from '@iconify/utils';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 /**
  * @param iconIdentifier - Format: "family:iconName" (e.g. "logos:twitch")
@@ -13,9 +15,9 @@ export const getBadgeIcon = (iconIdentifier: string, color: string = '#fff', siz
 
         if (!prefix || !iconName) return '';
 
-        // * 2. Dynamic import: We only load the requested family into memory.
-        // TODO: Next.js will know how to find this inside node_modules without adding 200MB to your final bundle.
-        const collection = require(`@iconify/json/json/${prefix}.json`);
+        // * 2. Read the icon collection from disk at runtime — avoids bundling 200MB of JSON with Turbopack.
+        const collectionPath = join(process.cwd(), 'node_modules', '@iconify', 'json', 'json', `${prefix}.json`);
+        const collection = JSON.parse(readFileSync(collectionPath, 'utf-8'));
 
         // * 3. We extract only the path of the icon using getIconData, which gives us the raw data needed to render the SVG. This is more efficient than loading the entire icon set into memory.
         const iconData = getIconData(collection, iconName);

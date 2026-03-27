@@ -1,29 +1,36 @@
 {
   "name": "badges",
-  "version": "0.0.1",
+  "version": "1.0.0-alpha.1.1",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "db:build": "npx prisma generate",
+    "db:migrate": "npx prisma migrate dev",
+    "db:deploy": "npx prisma migrate deploy",
+    "dev": "npm run db:build && npm run db:migrate && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
-    "@iconify/json": "2.2.449",
+    "@iconify/json": "2.2.455",
     "@iconify/utils": "3.1.0",
-    "next": "16.1.6",
+    "@prisma/adapter-pg": "7.5.0",
+    "@prisma/client": "7.5.0",
+    "better-auth": "1.5.6",
+    "next": "16.2.1",
     "octokit": "5.0.5",
+    "prisma": "7.5.0",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "4.2.1",
+    "@tailwindcss/postcss": "4.2.2",
     "@types/node": "25.5.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "eslint": "10.0.3",
-    "eslint-config-next": "16.1.6",
-    "tailwindcss": "4.2.1",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.1",
+    "tailwindcss": "4.2.2",
     "typescript": "5.9.3"
   }
 }
