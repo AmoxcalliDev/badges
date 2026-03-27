@@ -1,5 +1,4 @@
 services:
-
   database:
     image: postgres:18.3-alpine
     ports:
@@ -24,6 +23,8 @@ services:
       - intranet
     volumes:
       - .:/home/dev
+    env_file:
+      - .env
     restart: unless-stopped
 
 volumes:
