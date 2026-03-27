@@ -1,0 +1,68 @@
+name: Compile Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+jobs:
+  validate-build:
+    name: Validate Docker Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Build
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Extract branch and version info
+        id: info
+        run: |
+          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          VERSION=$(node -p "require('./package.json').version")
+          echo "branch=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Build info - Branch: $BRANCH_NAME, Version: $VERSION"
+      
+      - name: Build Docker image (validation only)
+        run: |
+          echo "🔨 Building Docker image to validate compilation..."
+          docker buildx build \
+            --platform linux/amd64 \
+            --tag badge:build-validation \
+            --load \
+            .
+          
+          echo "✅ Docker build completed successfully!"
+          
+      - name: Check image size
+        run: |
+          IMAGE_SIZE=$(docker images badge:build-validation --format "{{.Size}}")
+          echo "📦 Image size: $IMAGE_SIZE"
+          
+      - name: Cleanup
+        if: always()
+        run: |
+          docker rmi badge:build-validation || true
+          
+      - name: Summary
+        if: success()
+        run: |
+          echo "### ✅ Build Validation Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** ${{ steps.info.outputs.branch }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** ${{ steps.info.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The Docker image compiled successfully. This PR is safe to merge from a build perspective." >> $GITHUB_STEP_SUMMARY
+          
+      - name: Failure Summary
+        if: failure()
+        run: |
+          echo "### ❌ Build Validation Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The Docker image failed to compile. Please review the build logs above and fix the compilation errors before merging this PR." >> $GITHUB_STEP_SUMMARY

@@ -15,6 +15,7 @@ services:
     build:
       context: .
       dockerfile: dockerfile
+    platform: linux/amd64
     init: true
     ports:
       - 3000:3000
