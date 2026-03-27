@@ -4,7 +4,7 @@ import { nextCookies } from 'better-auth/next-js';
 
 import { prisma } from '@/utils/adapter/prisma';
 
-import { getSeconds } from '@/utils/time/fractions';
+import { getSeconds } from '@/utils/dateTime/fractions';
 
 export const auth = betterAuth({
     appName: 'Ignite WebApp',
