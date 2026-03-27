@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Octokit } from 'octokit';
-import { getErrorSvg } from '@/utils/svg/error';
+
 import { getBadgeSvg } from '@/utils/svg/badge';
 
 const { env } = process;
@@ -13,7 +13,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ queryParam
     const { queryParams } = await params;
 
     if (queryParams.length < 2) {
-        return new NextResponse(getErrorSvg('Invalid Request', 'Missing parameters'), {
+        return new NextResponse(getBadgeSvg('github', 'invalid query', { icon: 'simple-icons:github', labelCase: 'upper' }).trim(), {
             status: 400,
             headers: { 'Content-Type': 'image/svg+xml' },
         });
@@ -30,7 +30,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ queryParam
         });
 
         isContributor = response.data.total_count > 0;
-    } catch (error) {
+    } catch {
         isContributor = false;
     }
 
@@ -47,7 +47,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ queryParam
             },
         });
     } catch {
-        return new NextResponse(getErrorSvg(organization, 'unavailable'), {
+        return new NextResponse(getBadgeSvg(organization, 'unavailable', { icon: 'simple-icons:github', rightBg: rightBgColor }).trim(), {
             status: 200,
             headers: { 'Content-Type': 'image/svg+xml' },
         });
