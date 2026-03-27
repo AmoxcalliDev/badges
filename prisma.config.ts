@@ -1,11 +1,13 @@
 import { defineConfig } from 'prisma/config';
 
+const env = process.env;
+
 export default defineConfig({
     schema: 'prisma/schema.prisma',
     migrations: {
         path: 'prisma/migrations'
     },
     datasource: {
-        url: process.env["POSTGRES_URL"],
+        url: `${env.POSTGRES_URL}`,
     },
 });
