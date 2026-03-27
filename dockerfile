@@ -1,12 +1,11 @@
 # check=skip=SecretsUsedInArgOrEnv
 
-FROM node:22-alpine AS deps
-RUN apk add --no-cache libc6-compat
+FROM --platform=linux/amd64 node:22 AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm ci --frozen --prefer-offline --no-audit --no-fund --fetch-retries=5 --fetch-retry-factor=2
+RUN npm install --prefer-offline --no-audit --no-fund --fetch-retries=5 --fetch-retry-factor=2
 
-FROM node:22-alpine AS builder
+FROM --platform=linux/amd64 node:22 AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -14,11 +13,16 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
+RUN mkdir -p node_modules/proper-lockfile/node_modules/signal-exit \
+    && echo '{"name":"signal-exit","version":"3.0.7","main":"./index.js"}' \
+       > node_modules/proper-lockfile/node_modules/signal-exit/package.json \
+    && npm run db:build
 RUN npm run build
 
-FROM node:22-alpine AS runner
+FROM --platform=linux/amd64 node:22-alpine AS runner
 
-RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
+RUN apk add --no-cache libc6-compat \
+    && addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 WORKDIR /app
 
 LABEL org.opencontainers.image.title="Badges" \
