@@ -16,7 +16,7 @@
     "@iconify/utils": "3.1.0",
     "@prisma/adapter-pg": "7.5.0",
     "@prisma/client": "7.5.0",
-    "better-auth": "1.6.2",
+    "better-auth": "1.6.11",
     "next": "16.2.6",
     "octokit": "5.0.5",
     "prisma": "7.8.0",
