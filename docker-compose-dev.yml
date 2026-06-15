@@ -1,12 +1,12 @@
 services:
   database:
-    image: postgres:18.3-alpine
+    image: postgres:18-alpine
     ports:
       - 5432:5432
     networks:
       - intranet
     volumes:
-      - database-data:/var/lib/postgresql/data
+      - database-data:/var/lib/postgresql
     env_file:
       - .env
     restart: unless-stopped
