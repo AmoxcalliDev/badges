@@ -23,7 +23,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ username: 
                 'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
             },
         });
-    } catch (error) {
+    } catch {
         return new NextResponse(getBadgeSvg('followers', 'unavailable', { icon: 'simple-icons:github', labelCase: 'upper' }).trim(), {
             status: 200,
             headers: { 'Content-Type': 'image/svg+xml' },

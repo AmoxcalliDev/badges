@@ -15,7 +15,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ username: 
                 'Cache-Control': 'public, s-maxage=7200, stale-while-revalidate=3600',
             },
         });
-    } catch (error) {
+    } catch {
         return new Response(getBadgeSvg('TWITCH', 'unavailable', { icon: 'simple-icons:twitch', labelCase: 'upper', rightBg: '#9146FF' }).trim(), {
             status: 200,
             headers: { 'Content-Type': 'image/svg+xml' },
