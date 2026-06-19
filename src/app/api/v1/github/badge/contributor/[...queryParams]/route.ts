@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Octokit } from 'octokit';
 
+import { BADGE_CACHE_HEADERS, SVG_CONTENT_TYPE } from '@/utils/http/cache';
 import { getBadgeSvg } from '@/utils/svg/badge';
 
 const { env } = process;
@@ -15,7 +16,10 @@ export const GET = async (_: Request, { params }: { params: Promise<{ queryParam
     if (queryParams.length < 2) {
         return new NextResponse(getBadgeSvg('github', 'invalid query', { icon: 'simple-icons:github', labelCase: 'upper' }).trim(), {
             status: 400,
-            headers: { 'Content-Type': 'image/svg+xml' },
+            headers: {
+                'Content-Type': SVG_CONTENT_TYPE,
+                ...BADGE_CACHE_HEADERS,
+            },
         });
     }
 
@@ -42,14 +46,17 @@ export const GET = async (_: Request, { params }: { params: Promise<{ queryParam
     try {
         return new NextResponse(svg.trim(), {
             headers: {
-                'Content-Type': 'image/svg+xml',
-                'Cache-Control': 'public, s-maxage=7200, stale-while-revalidate=3600',
+                'Content-Type': SVG_CONTENT_TYPE,
+                ...BADGE_CACHE_HEADERS,
             },
         });
     } catch {
         return new NextResponse(getBadgeSvg(organization, 'unavailable', { icon: 'simple-icons:github', rightBg: rightBgColor }).trim(), {
             status: 200,
-            headers: { 'Content-Type': 'image/svg+xml' },
+            headers: {
+                'Content-Type': SVG_CONTENT_TYPE,
+                ...BADGE_CACHE_HEADERS,
+            },
         });
     }
 }

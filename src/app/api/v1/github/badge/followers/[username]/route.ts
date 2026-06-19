@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Octokit } from 'octokit';
 
+import { BADGE_CACHE_HEADERS, SVG_CONTENT_TYPE } from '@/utils/http/cache';
 import { formatCompactNumber } from '@/utils/numbers/compact';
 import { getBadgeSvg } from '@/utils/svg/badge';
 
@@ -19,14 +20,17 @@ export const GET = async (_: Request, { params }: { params: Promise<{ username: 
 
         return new NextResponse(svg.trim(), {
             headers: {
-                'Content-Type': 'image/svg+xml',
-                'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
+                'Content-Type': SVG_CONTENT_TYPE,
+                ...BADGE_CACHE_HEADERS,
             },
         });
     } catch {
         return new NextResponse(getBadgeSvg('followers', 'unavailable', { icon: 'simple-icons:github', labelCase: 'upper' }).trim(), {
             status: 200,
-            headers: { 'Content-Type': 'image/svg+xml' },
+            headers: {
+                'Content-Type': SVG_CONTENT_TYPE,
+                ...BADGE_CACHE_HEADERS,
+            },
         });
     }
 }
