@@ -17,7 +17,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ queryParam
         return new NextResponse(getBadgeSvg('github', 'invalid query', { icon: 'simple-icons:github', labelCase: 'upper' }).trim(), {
             status: 400,
             headers: {
-                'Content-Type': SVG_CONTENT_TYPE,
+                ...SVG_CONTENT_TYPE,
                 ...BADGE_CACHE_HEADERS,
             },
         });
@@ -46,7 +46,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ queryParam
     try {
         return new NextResponse(svg.trim(), {
             headers: {
-                'Content-Type': SVG_CONTENT_TYPE,
+                ...SVG_CONTENT_TYPE,
                 ...BADGE_CACHE_HEADERS,
             },
         });
@@ -54,7 +54,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ queryParam
         return new NextResponse(getBadgeSvg(organization, 'unavailable', { icon: 'simple-icons:github', rightBg: rightBgColor }).trim(), {
             status: 200,
             headers: {
-                'Content-Type': SVG_CONTENT_TYPE,
+                ...SVG_CONTENT_TYPE,
                 ...BADGE_CACHE_HEADERS,
             },
         });
