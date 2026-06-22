@@ -12,7 +12,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ username: 
 
         return new Response(badgeSvg.trim(), {
             headers: {
-                'Content-Type': SVG_CONTENT_TYPE,
+                ...SVG_CONTENT_TYPE,
                 ...BADGE_CACHE_HEADERS,
             },
         });
@@ -20,7 +20,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ username: 
         return new Response(getBadgeSvg('TWITCH', 'unavailable', { icon: 'simple-icons:twitch', labelCase: 'upper', rightBg: '#9146FF' }).trim(), {
             status: 200,
             headers: {
-                'Content-Type': SVG_CONTENT_TYPE,
+                ...SVG_CONTENT_TYPE,
                 ...BADGE_CACHE_HEADERS,
             },
         });

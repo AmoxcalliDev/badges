@@ -20,7 +20,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ username: 
 
         return new NextResponse(svg.trim(), {
             headers: {
-                'Content-Type': SVG_CONTENT_TYPE,
+                ...SVG_CONTENT_TYPE,
                 ...BADGE_CACHE_HEADERS,
             },
         });
@@ -28,7 +28,7 @@ export const GET = async (_: Request, { params }: { params: Promise<{ username: 
         return new NextResponse(getBadgeSvg('followers', 'unavailable', { icon: 'simple-icons:github', labelCase: 'upper' }).trim(), {
             status: 200,
             headers: {
-                'Content-Type': SVG_CONTENT_TYPE,
+                ...SVG_CONTENT_TYPE,
                 ...BADGE_CACHE_HEADERS,
             },
         });
