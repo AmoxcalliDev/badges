@@ -35,7 +35,7 @@ const generateAccessToken = async (): Promise<string> => {
 
     const data = await response.json();
 
-    const accessTokenExpiresAt = new Date(new Date().getTime() + (data.expires_in * 1000));
+    const accessTokenExpiresAt = new Date(Date.now() + (data.expires_in * 1000));
 
     await prisma.account.upsert({
         where: {

@@ -1,4 +1,5 @@
 import { getStreamerInfo } from '@/utils/model/twitch';
+import { BADGE_CACHE_HEADERS, SVG_CONTENT_TYPE } from '@/utils/http/cache';
 import { getBadgeSvg } from '@/utils/svg/badge';
 
 export const GET = async (_: Request, { params }: { params: Promise<{ username: string }> }) => {
@@ -11,14 +12,17 @@ export const GET = async (_: Request, { params }: { params: Promise<{ username: 
 
         return new Response(badgeSvg.trim(), {
             headers: {
-                'Content-Type': 'image/svg+xml',
-                'Cache-Control': 'public, s-maxage=7200, stale-while-revalidate=3600',
+                ...SVG_CONTENT_TYPE,
+                ...BADGE_CACHE_HEADERS,
             },
         });
-    } catch (error) {
+    } catch {
         return new Response(getBadgeSvg('TWITCH', 'unavailable', { icon: 'simple-icons:twitch', labelCase: 'upper', rightBg: '#9146FF' }).trim(), {
             status: 200,
-            headers: { 'Content-Type': 'image/svg+xml' },
+            headers: {
+                ...SVG_CONTENT_TYPE,
+                ...BADGE_CACHE_HEADERS,
+            },
         });
     }
-}
+};

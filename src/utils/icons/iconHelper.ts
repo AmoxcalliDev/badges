@@ -1,6 +1,6 @@
 import { getIconData, iconToSVG } from '@iconify/utils';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 /**
  * @param iconIdentifier - Format: "family:iconName" (e.g. "logos:twitch")
