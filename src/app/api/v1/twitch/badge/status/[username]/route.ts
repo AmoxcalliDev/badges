@@ -25,4 +25,4 @@ export const GET = async (_: Request, { params }: { params: Promise<{ username: 
             },
         });
     }
-}
+};

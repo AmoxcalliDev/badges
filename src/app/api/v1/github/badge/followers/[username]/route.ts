@@ -1,20 +1,16 @@
 import { NextResponse } from 'next/server';
-import { Octokit } from 'octokit';
 
 import { BADGE_CACHE_HEADERS, SVG_CONTENT_TYPE } from '@/utils/http/cache';
+import { getUserFollowersCount } from '@/utils/model/github';
 import { formatCompactNumber } from '@/utils/numbers/compact';
 import { getBadgeSvg } from '@/utils/svg/badge';
-
-const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN,
-});
 
 export const GET = async (_: Request, { params }: { params: Promise<{ username: string }> }) => {
     const { username } = await params;
 
     try {
-        const { data } = await octokit.rest.users.getByUsername({ username });
-        const followers = formatCompactNumber(data.followers);
+        const followersCount = await getUserFollowersCount(username);
+        const followers = formatCompactNumber(followersCount);
 
         const svg = getBadgeSvg('followers', followers, { icon: 'simple-icons:github', labelCase: 'upper' });
 
@@ -33,4 +29,4 @@ export const GET = async (_: Request, { params }: { params: Promise<{ username: 
             },
         });
     }
-}
+};

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { BADGE_CACHE_HEADERS, SVG_CONTENT_TYPE } from '@/utils/http/cache';
-import { hasMergedPrContribution } from '@/utils/model/github';
+import { getGithubBadgeErrorText, getRepositoryLicense } from '@/utils/model/github';
 import { getBadgeSvg } from '@/utils/svg/badge';
 
 export const GET = async (_: Request, { params }: { params: Promise<{ queryParams: string[] }> }) => {
@@ -17,30 +17,21 @@ export const GET = async (_: Request, { params }: { params: Promise<{ queryParam
         });
     }
 
-    const [organization, username] = queryParams;
-
-    let isContributor = false;
+    const [username, repository] = queryParams;
 
     try {
-        isContributor = await hasMergedPrContribution(organization, username);
-    } catch {
-        isContributor = false;
-    }
+        const { spdx_id, key, name } = await getRepositoryLicense(username, repository);
+        const licenseText = spdx_id && spdx_id !== 'NOASSERTION' ? spdx_id : (key ?? name ?? 'unknown');
+        const svg = getBadgeSvg('license', licenseText, { icon: 'simple-icons:github', labelCase: 'upper' });
 
-    const statusText = isContributor ? 'Contributor' : 'Future Contributor';
-    const rightBgColor = isContributor ? '#238636' : '#30363d';
-
-    const svg = getBadgeSvg(organization, statusText, { icon: 'simple-icons:github', rightBg: rightBgColor });
-
-    try {
         return new NextResponse(svg.trim(), {
             headers: {
                 ...SVG_CONTENT_TYPE,
                 ...BADGE_CACHE_HEADERS,
             },
         });
-    } catch {
-        return new NextResponse(getBadgeSvg(organization, 'unavailable', { icon: 'simple-icons:github', rightBg: rightBgColor }).trim(), {
+    } catch (error) {
+        return new NextResponse(getBadgeSvg('license', getGithubBadgeErrorText(error), { icon: 'simple-icons:github', labelCase: 'upper' }).trim(), {
             status: 200,
             headers: {
                 ...SVG_CONTENT_TYPE,
